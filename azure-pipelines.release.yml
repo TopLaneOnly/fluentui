@@ -7,7 +7,7 @@ name: 'v8_$(Date:yyyyMMdd)$(Rev:.r)'
 
 variables:
   - group: 'Github and NPM secrets'
-  - group: InfoSec-SecurityResults
+#  - group: InfoSec-SecurityResults
   - template: .devops/templates/variables.yml
     parameters:
       skipComponentGovernanceDetection: false
