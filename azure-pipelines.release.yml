@@ -37,8 +37,10 @@ steps:
   - script: |
       git config user.name "Fluent UI Build"
       git config user.email "fluentui-internal@service.microsoft.com"
-      git remote set-url origin https://$(githubUser):$(githubPAT)@github.com/microsoft/fluentui.git
+      git remote set-url origin https://github.com/microsoft/fluentui.git
     displayName: Authenticate git for pushes
+#      git remote set-url origin https://$(githubUser):$(githubPAT)@github.com/microsoft/fluentui.git
+
 
   - task: Bash@3
     inputs:
@@ -67,12 +69,12 @@ steps:
       yarn run:published bundle --only --production
     displayName: yarn bundle
 
-  - script: |
-      yarn publish:beachball -n $(npmToken)
-      git reset --hard origin/master
-    env:
-      GITHUB_PAT: $(githubPAT)
-    displayName: Publish changes and bump versions
+  # - script: |
+  #     yarn publish:beachball -n $(npmToken)
+  #     git reset --hard origin/master
+  #   env:
+  #     GITHUB_PAT: $(githubPAT)
+  #   displayName: Publish changes and bump versions
 
   - script: |
       echo Making $(Build.ArtifactStagingDirectory)/api
@@ -170,9 +172,9 @@ steps:
 
   # Run this near the end because it's more likely to fail than the artifact upload tasks, and its
   # failure doesn't need to block anything else
-  - script: |
-      node -r ./scripts/ts-node-register ./scripts/updateReleaseNotes/index.ts --token=$(githubPAT) --apply --debug
-    displayName: 'Update github release notes'
+  # - script: |
+  #     node -r ./scripts/ts-node-register ./scripts/updateReleaseNotes/index.ts --token=$(githubPAT) --apply --debug
+  #   displayName: 'Update github release notes'
 
   - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
     displayName: 📒 Generate Manifest
@@ -200,3 +202,8 @@ steps:
   - template: .devops/templates/cleanup.yml
     parameters:
       checkForModifiedFiles: false
+
+  - script: |
+      echo E
+      exit /b 1
+    displayName: BREAK TO NOT TRIGGER RELEASE
