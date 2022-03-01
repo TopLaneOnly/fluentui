@@ -1,0 +1,19 @@
+
+steps:
+- task: UseDotNet@2
+  condition: succeededOrFailed()
+  displayName: 'Use .NET Core sdk 3.x'
+  inputs:
+    version: 3.x
+    steps:
+
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-credscan.CredScan@3
+  condition: succeededOrFailed()
+  displayName: '🧭 Run Credential Scanner'
+  inputs:
+    debugMode: false
+
+- task: securedevelopmentteam.vss-secure-development-tools.build-task-eslint.ESLint@1
+  condition: succeededOrFailed()
+  displayName: '🧭 Run ESLint'
+

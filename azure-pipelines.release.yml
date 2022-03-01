@@ -7,9 +7,12 @@ name: 'v8_$(Date:yyyyMMdd)$(Rev:.r)'
 
 variables:
   - group: 'Github and NPM secrets'
+  - group: InfoSec-SecurityResults
   - template: .devops/templates/variables.yml
     parameters:
       skipComponentGovernanceDetection: false
+  - name: tags
+    value: production,externalfacing
 
 pool: '1ES-Host-Ubuntu'
 
@@ -27,6 +30,8 @@ workspace:
   clean: all
 
 steps:
+  - template: .devops/templates/guardian-begin.yml
+
   - template: .devops/templates/tools.yml
 
   - script: |
@@ -189,6 +194,8 @@ steps:
     condition: succeeded()
     timeoutInMinutes: 5
     continueOnError: true
+
+  - template: .devops/templates/guardian-end.yml
 
   - template: .devops/templates/cleanup.yml
     parameters:
